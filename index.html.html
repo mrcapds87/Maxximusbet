@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@mrc.maxximusbet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #070b14;
+    font-family: 'Barlow', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Background effects */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, #1a1200 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, #0d3a1a 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .glow-top {
+    position: fixed;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(255,184,0,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Field lines at bottom */
+  .field-bg {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 200px;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Card container */
+  .card {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Avatar */
+  .avatar-wrap {
+    position: relative;
+    margin-bottom: 16px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .avatar {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffb800, #ff6b00);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 0 0 3px #070b14, 0 0 0 5px rgba(255,184,0,0.4), 0 8px 32px rgba(255,184,0,0.25);
+  }
+  .live-badge {
+    position: absolute;
+    bottom: 4px; right: 4px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #00e676;
+    border: 2px solid #070b14;
+    box-shadow: 0 0 10px #00e676;
+    animation: pulse 1.8s infinite;
+  }
+
+  /* Name & handle */
+  .profile-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    color: #fff;
+    text-align: center;
+    animation: fadeDown 0.6s 0.1s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  .profile-handle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: rgba(255,184,0,0.7);
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 2px;
+    margin-bottom: 8px;
+    animation: fadeDown 0.6s 0.15s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  /* Bio */
+  .bio {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    padding: 0 20px;
+    animation: fadeDown 0.6s 0.2s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.25s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  .divider-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,184,0,0.35), transparent);
+  }
+  .divider span { font-size: 16px; }
+
+  /* Links */
+  .links {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .link-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    border-radius: 16px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .link-btn:hover {
+    transform: translateY(-2px);
+  }
+  .link-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* WhatsApp button */
+  .btn-whatsapp {
+    background: linear-gradient(135deg, #00c853 0%, #007d32 100%);
+    box-shadow: 0 6px 28px rgba(0,200,83,0.35), 0 0 0 1px rgba(255,255,255,0.08) inset;
+    animation-delay: 0.35s;
+  }
+  .btn-whatsapp::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+  .btn-whatsapp:hover {
+    box-shadow: 0 10px 36px rgba(0,200,83,0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
+  }
+
+  .btn-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .btn-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .btn-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #fff;
+    display: block;
+    line-height: 1;
+  }
+  .btn-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    display: block;
+    margin-top: 3px;
+  }
+  .btn-arrow {
+    font-size: 22px;
+    color: rgba(255,255,255,0.6);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Stats strip */
+  .stats {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    animation: fadeUp 0.6s 0.55s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  .stat {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,184,0,0.15);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    background: linear-gradient(180deg, #ffe566, #ffb800);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 32px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.15);
+    text-align: center;
+    animation: fadeUp 0.6s 0.65s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:.5; transform:scale(.8); }
+  }
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-16px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-top"></div>
+
+<!-- Field SVG background -->
+<svg class="field-bg" viewBox="0 0 480 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <rect y="80" width="480" height="120" fill="url(#fg2)"/>
+  <ellipse cx="240" cy="80" rx="90" ry="26" stroke="rgba(255,255,255,0.08)" stroke-width="1.2" fill="none"/>
+  <line x1="0" y1="80" x2="480" y2="80" stroke="rgba(255,255,255,0.06)" stroke-width="1.2"/>
+  <rect x="20" y="68" width="55" height="24" stroke="rgba(255,255,255,0.07)" stroke-width="1.2" fill="none"/>
+  <rect x="405" y="68" width="55" height="24" stroke="rgba(255,255,255,0.07)" stroke-width="1.2" fill="none"/>
+  <defs>
+    <linearGradient id="fg2" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#0d3a1a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#030d07" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="card">
+
+  <!-- Avatar -->
+  <div class="avatar-wrap">
+    <div class="avatar">⚽</div>
+    <div class="live-badge"></div>
+  </div>
+
+  <!-- Name -->
+  <div class="profile-name">MAXXIMUSBET</div>
+  <div class="profile-handle">@mrc.maxximusbet</div>
+
+  <!-- Bio -->
+  <div class="bio">
+    Palpites gratuitos todos os dias direto no seu WhatsApp.<br>
+    Análises, entradas prontas e alertas antes dos jogos. ✅
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span>⚽</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- Links -->
+  <div class="links">
+
+    <!-- WhatsApp Group -->
+    <a class="link-btn btn-whatsapp" href="SEU_LINK_DO_GRUPO_AQUI" target="_blank">
+      <span class="btn-icon">💬</span>
+      <div class="btn-content">
+        <span class="btn-title">Grupo de Palpites</span>
+        <span class="btn-sub">Gratuito • Vagas limitadas</span>
+      </div>
+      <span class="btn-arrow">→</span>
+    </a>
+
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-value">100%</span>
+      <span class="stat-label">Gratuito</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">diário</span>
+      <span class="stat-label">Palpites</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">⚡</span>
+      <span class="stat-label">Ao vivo</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">@mrc.maxximusbet • 2026</div>
+
+</div>
+
+</body>
+</html>
